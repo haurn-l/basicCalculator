@@ -16,7 +16,7 @@ public class HesapMakinesi {
         // Harfleri ve operatörleri ayırıyoruz
         for (int i = 0; i < ifade.length(); i++) {
             char karakter = ifade.charAt(i);
-            if (Character.isLetterOrDigit(karakter)) {
+            if (Character.isLetterOrDigit(karakter) || (karakter == '-' && (i == 0 || ifade.charAt(i-1) == '*' || ifade.charAt(i-1) == '/' || ifade.charAt(i-1) == '+' || ifade.charAt(i-1) == '-'))) {
                 gecici += karakter;
             } else {
                 if (!gecici.equals("")) {
@@ -69,7 +69,9 @@ public class HesapMakinesi {
 
         for (int i = 1; i < guncelIfade.size(); i += 2) {
             String islem = guncelIfade.get(i);
-            double sayi = Double.parseDouble(guncelIfade.get(i + 1));
+            String sayiStr = guncelIfade.get(i + 1);
+
+            double sayi = Double.parseDouble(sayiStr);
 
             switch (islem) {
                 case "+":
@@ -82,10 +84,14 @@ public class HesapMakinesi {
                     sonuc *= sayi;
                     break;
                 case "/":
+                    if (sayi == 0) {
+                        System.out.println("Sıfıra bölme hatası!");
+                        return;
+                    }
                     sonuc /= sayi;
                     break;
-                case "^":  // Kuvvet işlemi
-                    sonuc = Math.pow(sonuc, sayi);  // Sonucu belirtilen kuvvetle hesapla
+                case "^":
+                    sonuc = Math.pow(sonuc, sayi);
                     break;
                 default:
                     System.out.println("Hatalı işlem: " + islem);
@@ -93,6 +99,6 @@ public class HesapMakinesi {
             }
         }
 
-        System.out.println("Sonuç (önceliksiz hesaplama): " + sonuc);
+        System.out.println("Sonuç: " + sonuc);
     }
 }
